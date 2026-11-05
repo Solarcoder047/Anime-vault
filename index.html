@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f1016">
+<title>Anime Vault</title>
+<style>
+:root{--acc:#ff5c8a;--bg:#0f1016;--card:#1a1b26;--card2:#232436;--tx:#eceef7;--mu:#8e92ad;--bd:#2c2e45}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,Roboto,sans-serif}
+body{padding-bottom:96px}
+header{position:sticky;top:0;z-index:10;background:var(--bg);padding:10px 14px 8px;padding-top:calc(10px + env(safe-area-inset-top));border-bottom:1px solid var(--bd)}
+.top{display:flex;align-items:center}
+h1{margin:0;font-size:22px;letter-spacing:.3px}
+h1 span{color:var(--acc)}
+#cnt{font-size:12px;color:var(--mu);margin-left:auto;margin-right:10px}
+#mb{background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:12px;width:42px;height:42px;font-size:22px}
+input,select,textarea{width:100%;padding:11px 12px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:12px;font-size:16px;font-family:inherit}
+#q{margin-top:8px}
+#chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0 4px;scrollbar-width:none}
+#chips::-webkit-scrollbar{display:none}
+.cd,.ch{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.ch{flex:none;background:var(--card);color:var(--mu);border:1px solid var(--bd);border-radius:20px;padding:7px 12px;font-size:13px}
+.ch b{color:var(--tx);margin-left:2px}
+.ch i.d{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.ch.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.ch.on b{color:#fff}
+.ch.plus{color:var(--acc);font-weight:700;font-size:16px;padding:5px 14px}
+.ctl{display:flex;gap:8px;align-items:center;padding-top:6px}
+.ctl select,#onbar select{padding:8px 6px;font-size:13px;flex:1;min-width:0}
+#onbar{display:none;gap:8px;padding-top:8px;align-items:center}
+main{padding:12px 14px}
+.gh{font-size:13px;color:var(--acc);font-weight:700;margin:14px 2px 8px;letter-spacing:.5px}
+.gh b{color:var(--mu);font-weight:400}
+.cd{display:flex;gap:10px;background:var(--card);border:1px solid var(--bd);border-left:4px solid var(--c);border-radius:14px;padding:10px;margin-bottom:10px}
+.ph{flex:none;width:54px;height:78px;border-radius:8px;overflow:hidden;background:var(--card2)}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.mn{min-width:0;flex:1}
+.tt{font-weight:600;font-size:15px;line-height:1.3;word-break:break-word}
+.mt{font-size:12px;color:var(--mu);margin-top:3px}
+.tg{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.tg span{font-size:11px;background:var(--card2);color:var(--mu);padding:3px 8px;border-radius:10px}
+.nt{font-size:12px;color:var(--mu);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-style:italic}
+.rt{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex:none}
+.bd{background:transparent;color:var(--c);border:1px solid var(--c);border-radius:12px;padding:5px 10px;font-size:12px;font-weight:600}
+.hr{background:none;border:0;color:var(--acc);font-size:24px;line-height:1;padding:2px 4px}
+.add{background:var(--acc);color:#fff;border:0;border-radius:12px;padding:7px 11px;font-size:12px;font-weight:600}
+.add.in{background:var(--card2);color:var(--mu)}
+.empty{text-align:center;color:var(--mu);padding:60px 20px;line-height:1.6}
+.warn{background:#2f2517;border:1px solid #6b4a1f;border-radius:12px;padding:12px;margin:0 0 12px;font-size:13px;line-height:1.5}
+#fab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));width:58px;height:58px;border-radius:50%;border:0;background:var(--acc);color:#fff;font-size:32px;box-shadow:0 6px 18px rgba(0,0,0,.5);z-index:9}
+#ov{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.65);display:none;align-items:flex-end;z-index:20}
+#ov.on{display:flex}
+#sh{width:100%;max-height:92vh;overflow:auto;background:var(--card);border-radius:20px 20px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom))}
+#sh h3{margin:0 0 6px;font-size:18px}
+label{display:block;font-size:12px;color:var(--mu);margin:12px 0 5px}
+.row{display:flex;gap:10px}
+.row>div{flex:1;min-width:0}
+.btn{display:block;width:100%;margin-top:10px;padding:13px;background:var(--card2);color:var(--tx);border:1px solid var(--bd);border-radius:12px;font-size:15px}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+.btn.dng{color:#ff7b7b;border-color:#5b2c35}
+.btn.sel{border-color:var(--acc);background:#2a1f2a;color:#fff}
+.row .btn{margin-top:10px}
+.fi{display:flex!important;gap:10px;align-items:center;text-align:left}
+.fi img{width:40px;height:56px;object-fit:cover;border-radius:6px;flex:none;background:var(--bg)}
+.rw{display:flex;gap:8px;align-items:center;margin-top:8px}
+.rw input[type=color]{width:46px;height:44px;padding:2px;flex:none}
+.rw .x{width:48px;flex:none;margin:0;padding:11px}
+#gcs{display:flex;flex-wrap:wrap;gap:7px}
+.gc{background:var(--bg);color:var(--mu);border:1px solid var(--bd);border-radius:16px;padding:6px 11px;font-size:13px}
+.gc.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.ck{display:flex;align-items:center;gap:10px;font-size:15px;color:var(--tx);margin-top:14px}
+.ck input{width:22px;height:22px}
+.hint{font-size:12px;color:var(--mu);line-height:1.5;margin:8px 0}
+.big{font-size:20px;font-weight:700;margin:10px 0 4px;line-height:1.3}
+.sw{display:flex;gap:10px;flex-wrap:wrap}
+.sw i{width:38px;height:38px;border-radius:50%;border:2px solid var(--bd);display:block}
+.dh{display:flex;gap:12px;align-items:flex-start}
+.dh img{width:92px;height:130px;object-fit:cover;border-radius:10px;flex:none;background:var(--card2)}
+.syn{font-size:13px;line-height:1.55;max-height:190px;overflow:auto;margin:10px 0}
+.sr{display:flex;flex-direction:column;padding:8px 0;border-bottom:1px solid var(--bd);font-size:14px}
+.sr span{font-size:12px;color:var(--mu)}
+#toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:#000c;color:#fff;padding:10px 16px;border-radius:20px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:30;max-width:90%;text-align:center}
+#toast.on{opacity:1}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><h1>Anime <span>Vault</span></h1><span id="cnt"></span><button id="mb" aria-label="Menu">&#8942;</button></div>
+  <input id="q" type="search" placeholder="Search title or genre..." autocomplete="off">
+  <div id="chips"></div>
+  <div class="ctl">
+    <select id="sort" aria-label="Sort">
+      <option value="order">My list order</option>
+      <option value="az">A &rarr; Z</option>
+      <option value="za">Z &rarr; A</option>
+      <option value="rating">Rating (high)</option>
+      <option value="recent">Recently updated</option>
+      <option value="type">Group by type</option>
+      <option value="genre">Group by genre</option>
+      <option value="status">By status</option>
+    </select>
+    <select id="gsel" aria-label="Genre"></select>
+    <select id="tsel" aria-label="Type"></select>
+  </div>
+  <div id="onbar"></div>
+</header>
+<main id="list"></main>
+<button id="fab" aria-label="Add anime">+</button>
+<div id="ov"><div id="sh"></div></div>
+<div id="toast"></div>
+
+<script>
+var G={R:'Romance',C:'Comedy',A:'Action',F:'Fantasy',D:'Drama',L:'Slice of Life',S:'Sci-Fi',E:'Ecchi',M:'Mystery',N:'Supernatural',U:'Music',T:'Sports'};
+var DEF_ST=[{n:'Completed',c:'#4cd48a'},{n:'Watching',c:'#4da3ff'},{n:'Planned',c:'#b08cff'},{n:'On Hold',c:'#ffb84d'},{n:'Dropped',c:'#ff6b6b'}];
+var DEF_TY=['TV','Movie','OVA','ONA','Special'];
+var COL=['#ff5c8a','#ff7a45','#f5c542','#4cd48a','#29c5d6','#4da3ff','#9b7bff','#e060e0'];
+var AG=['Action','Adventure','Comedy','Drama','Ecchi','Fantasy','Horror','Mahou Shoujo','Mecha','Music','Mystery','Psychological','Romance','Sci-Fi','Slice of Life','Sports','Supernatural','Thriller'];
+var KEY='animeVault.v1';
+var SEED=[
+"My Love Story with Yamada-kun at Lv999|RC","Alya Sometimes Hides Her Feelings in Russian|RC","Kaguya-sama: Love Is War|RC","Horimiya|RCL","The Fragrant Flower Blooms with Dignity|RL",
+"The Angel Next Door Spoils Me Rotten|RCL","Gals Can't Be Kind to Otaku!?|RCE","I Made Friends to Second Prettiest Girl—My Class|RCL","I Want to Eat This Love Game|","Rent-a-Girlfriend|RCE",
+"Klutzy Class Monitor & the Girl with the Short Skirt|RC","Oh Boy, Was I Wrong About Her|","Weathering with You|RDN|M","Call of the Night|RCN","My Teen Romantic Comedy SNAFU|RCD",
+"Teasing Master Takagi-san|RCL","I Want to Eat Your Pancreas|RD|M","More than a Married Couple, but Not Lovers.|RCE","The Dangers in My Heart|RCL","The Ice Guy and His Cool Female Colleague|RCL",
+"Kimi ni Todoke: From Me to You|RDL","My Dress-Up Darling|RCE","Blue Box|RTD","You and I Are Polar Opposites|RCL","The Experienced You and The Inexperienced Me|RCE",
+"The Girl I Like Forgot Her Glasses|RCL","Won't Let Me Be Invisible|","Real Girl|RC","Wotakoi: Love Is Hard for Otaku|RC","Tamako Love Story|RL|M",
+"The Tunnel to Summer, the Exit of Goodbyes|RFD|M","TONIKAWA: Over The Moon For You|RC","Tsukigakirei|RDL","Lovely Complex|RC","The 100 Girlfriends Who Really, Really, Really, Really, Really Love You|RCE",
+"ReLife|RCD","ORESUKI: Are you the only one who loves me?|RC","Hello World|RS|M","The Anthem of the Heart|DU|M","Himouto! Umaru-chan|CL",
+"Skip and Loafer|RCL","Pseudo Harem|RC","The Day I Became a God|CDN","I'm Getting Married to a Girl I Hate in My Class|RC","Rich Girl Caretaker|RC",
+"My Friend's Little Sister Has It In for Me!|RCE","Attack on Titan|ADF","Shikimori's Not Just a Cutie|RCL","The Foolish Angel Dances with the Devil|RCF","Love Election and Chocolate|RM",
+"Girlfriend, Girlfriend|RCE","Momokuri|RCL","Studio Apartment, Good Lighting, Angel Included|RCN","The Unexpressive Kashiwada and the Expressive Oota|RCL","You are Ms. Servant|RC",
+"Even a Replica Can Fall in Love|RS","Bottom-Tier Character Tomozaki|RCL","365 Days to the Wedding|RD","Days with My Stepsister|RL","True Tears|RD",
+"And You Thought There Is Never a Girl Online?|RC","Gamers!|RC","Say \"I Love You\"|RD","Your Name|RDN|M","A Town Where You Live|RD",
+"Toradora!|RCD","Golden Time|RCD","Josee, the Tiger and the Fish|RD|M","Anyway, I'm Falling in Love with You|RC","Love, Unseen Beneath the Clear Night Sky|R",
+"The Devil is a Part-Timer!|ACF","Engage Kiss|AEF","Agents of the Four Seasons|FD","The Pet Girl of Sakurasou|RCD","Working!!|CL",
+"I Can't Understand What My Husband Is Saying|RC","Boarding School Juliet|RC","Insomniacs After School|RL","Snow White with the Red Hair|RFD","Tomo-chan Is a Girl!|RC",
+"You Can't Be in a Rom-Com with Your Childhood Friend|RC","Hanadori-san Still Wants to Fight in Next Life|","Maboroshi|DF|M","Love, Chunibyo & Other Delusions!|RCD","Aharen-san wa Hakarenai|RC",
+"As Miss Beelzebub Likes|RF","Maid Sama!|RC","Monthly Girls' Nozaki-kun|RC","My Bride is a Mermaid|RCF","Rainbow Days|RL",
+"Darling in the Franxx|ASRDE","Black Clover|ACF","Tying the Knot with an Amagami Sister|RCE","Amagami SS|RC","Love Me, Love Me Not|RDL",
+"Fruits Basket|RDN","Tada Never Falls in Love|RC","Dealing with Mikadono Sisters Is a Breeze|RC","My Happy Marriage|RFD","Makeine: Too Many Losing Heroines!|RC",
+"High School DxD|AEF","Please Put Them On, Takamine-san|CE","K-On!|CLU","My Instant Death Ability Is So Overpowered|ACF","The Yakuza's Guide to Babysitting|CL",
+"Saekano: How to Raise a Boring Girlfriend|RC","Sparks of Tomorrow|","Chivalry of a Failed Knight|AEF","Net-juu no Susume (Recovery of an MMO Junkie)|RC","Senpai is an Otokonoko|RC",
+"Bakemonogatari|RMN","Watari-kun's ****** is About to Collapse|RCE","O Maidens in Your Savage Season|RCD","A Whisker Away|RFD|M","Chitose Is in the Ramune Bottle|RCL"
+];
+
+/* ================= basics ================= */
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function uid(){return 'u'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function enc(s){return encodeURIComponent(s)}
+function uniq(a){return a.filter(function(v,i){return v&&a.indexOf(v)===i})}
+function cpst(){return DEF_ST.map(function(o){return{n:o.n,c:o.c}})}
+function tagList(){return Object.keys(G).map(function(k){return G[k]})}
+function defOn(){return[{id:'air',k:'airing',n:'Top Airing',c:'#ff7a45',cfg:{sort:'POPULARITY_DESC',genre:'',n:25}},{id:'up',k:'upcoming',n:'Upcoming 30d',c:'#29c5d6',cfg:{sort:'POPULARITY_DESC',genre:'',n:25}}]}
+function seed(){return SEED.map(function(s,i){var p=s.split('|');return norm({id:'s'+i,t:p[0],s:'Completed',g:(p[1]||'').split('').filter(function(c){return G[c]}).map(function(c){return G[c]}),ty:p[2]==='M'?'Movie':'TV',c:i},i)})}
+function norm(x,i){return{id:x.id||uid(),t:String(x.t),s:x.s?String(x.s):'',r:Math.min(10,Math.max(0,+x.r||0)),g:Array.isArray(x.g)?x.g.map(String):[],ty:x.ty?String(x.ty):'',e:+x.e||0,te:+x.te||0,n:x.n?String(x.n):'',f:!!x.f,c:typeof x.c==='number'?x.c:i,u:+x.u||0,ai:+x.ai||0,rv:+x.rv||0,poster:x.poster?String(x.poster):'',syn:x.syn?String(x.syn):'',alId:+x.alId||0,sc:Array.isArray(x.sc)?x.sc:[],scFull:+x.scFull||0,srcs:+x.srcs||0}}
+function defaults(){return{items:seed(),acc:COL[0],mig:4,st:cpst(),ty:DEF_TY.slice(),tags:tagList(),fav:true,on:defOn(),ban:1}}
+function load(){
+  try{var d=JSON.parse(localStorage.getItem(KEY));
+    if(d&&Array.isArray(d.items)){
+      d.items=d.items.map(norm);d.acc=d.acc||COL[0];
+      if(!d.mig){d.items.forEach(function(x){if(x.s==='Planned'&&!x.u)x.s='Completed';if(!x.ty)x.ty='TV'})}
+      if(!Array.isArray(d.st))d.st=cpst();
+      if(!Array.isArray(d.ty))d.ty=DEF_TY.slice();
+      if(!Array.isArray(d.tags))d.tags=tagList();
+      if(typeof d.fav!=='boolean')d.fav=true;
+      if(!Array.isArray(d.on))d.on=defOn();
+      d.mig=4;return d}
+  }catch(e){}
+  return defaults();
+}
+var db=load();
+var view={q:'',st:'All',g:'All',t:'All',sort:'order'};
+var editing=null,pickKey='*',pickId=null,tt,lastRes=[],auto=null,formExtra=null,detailId=null,ocache={},olist=[],asOpt={scope:'new',by:'type'};
+function syncCats(){
+  db.items.forEach(function(x){
+    if(x.s&&!db.st.some(function(o){return o.n===x.s}))db.st.push({n:x.s,c:'#8e92ad'});
+    if(x.ty&&db.ty.indexOf(x.ty)<0)db.ty.push(x.ty);
+    x.g.forEach(function(g){if(db.tags.indexOf(g)<0)db.tags.push(g)})});
+}
+function persist(){syncCats();try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){toast('Could not save - storage full?')}}
+function applyAcc(){document.documentElement.style.setProperty('--acc',db.acc)}
+function find(id){return db.items.filter(function(i){return i.id===id})[0]}
+function touch(x){x.u=Date.now();persist();render()}
+function nextC(){return db.items.reduce(function(m,i){return Math.max(m,i.c)},-1)+1}
+function toast(m){var t=$('toast');t.textContent=m;t.className='on';clearTimeout(tt);tt=setTimeout(function(){t.className=''},2400)}
+function stNames(){return db.st.map(function(o){return o.n})}
+function scol(n){var o=db.st.filter(function(s){return s.n===n})[0];return o?o.c:'#8e92ad'}
+function tord(t){var i=db.ty.indexOf(t);return i<0?99:i}
+function sord(s){var i=stNames().indexOf(s);return i<0?99:i}
+function defStatus(){return stNames().indexOf('Completed')>=0?'Completed':(db.st[0]?db.st[0].n:'')}
+function planStatus(){return stNames().indexOf('Planned')>=0?'Planned':defStatus()}
+function onTab(){if(view.st.indexOf('on:')!==0)return null;var id=view.st.slice(3);return db.on.filter(function(o){return o.id===id})[0]||null}
+
+/* ================= list ================= */
+function tvCount(x){return (x.sc||[]).filter(function(s){return s.ty==='TV'}).length}
+function filtered(){
+  var q=view.q.trim().toLowerCase();
+  var a=db.items.filter(function(x){
+    if(q&&x.t.toLowerCase().indexOf(q)<0&&x.g.join(' ').toLowerCase().indexOf(q)<0)return false;
+    if(view.st==='Fav'){if(!x.f)return false}else if(view.st==='Review'){if(!x.rv)return false}else if(view.st!=='All'&&x.s!==view.st)return false;
+    if(view.g!=='All'&&x.g.indexOf(view.g)<0)return false;
+    if(view.t!=='All'&&x.ty!==view.t)return false;
+    return true});
+  var f={
+    order:function(a,b){return a.c-b.c},
+    az:function(a,b){return a.t.localeCompare(b.t)},
+    za:function(a,b){return b.t.localeCompare(a.t)},
+    rating:function(a,b){return b.r-a.r||a.t.localeCompare(b.t)},
+    recent:function(a,b){return b.u-a.u||a.c-b.c},
+    type:function(a,b){return tord(a.ty)-tord(b.ty)||a.t.localeCompare(b.t)},
+    genre:function(a,b){return a.t.localeCompare(b.t)},
+    status:function(a,b){return sord(a.s)-sord(b.s)||a.t.localeCompare(b.t)}};
+  return a.sort(f[view.sort]||f.order);
+}
+function card(x){
+  var m=[x.ty].filter(Boolean);
+  var tv=tvCount(x);if(tv>1)m.push(tv+' seasons');
+  if(x.te&&tv<2)m.push((x.e&&x.e!==x.te?x.e+'/':'')+x.te+' eps');else if(x.e&&tv<2)m.push(x.e+' eps');
+  if(x.r)m.push('★ '+x.r);
+  return '<div class="cd" data-id="'+x.id+'" style="--c:'+(x.s?scol(x.s):'#8e92ad')+'">'
+   +(x.poster?'<div class="ph"><img loading="lazy" src="'+esc(x.poster)+'" alt=""></div>':'')
+   +'<div class="mn"><div class="tt">'+esc(x.t)+(x.rv?' <span title="needs review" style="color:#ffb84d">⚠</span>':'')+'</div>'+(m.length?'<div class="mt">'+esc(m.join(' · '))+'</div>':'')
+   +(x.g.length?'<div class="tg">'+x.g.map(function(g){return '<span>'+esc(g)+'</span>'}).join('')+'</div>':'')
+   +(x.n?'<div class="nt">'+esc(x.n)+'</div>':'')
+   +'</div><div class="rt">'+(db.st.length>1?'<button class="bd" data-a="st">'+esc(x.s||'No status')+'</button>':'')
+   +(db.fav?'<button class="hr" data-a="fav">'+(x.f?'♥':'♡')+'</button>':'')+'</div></div>';
+}
+function chip(k,label,cnt,col,on){return '<button class="ch'+(on?' on':'')+'" data-st="'+esc(k)+'">'+(col?'<i class="d" style="background:'+col+'"></i>':'')+label+(cnt==null?'':' <b>'+cnt+'</b>')+'</button>'}
+function render(){
+  var names=stNames(),sc={},fc=0,rvc=0;
+  db.items.forEach(function(x){sc[x.s]=(sc[x.s]||0)+1;if(x.f)fc++;if(x.rv)rvc++});
+  if(view.st!=='All'&&view.st!=='Fav'&&view.st!=='Review'&&view.st.indexOf('on:')!==0&&names.indexOf(view.st)<0)view.st='All';
+  if(view.st==='Fav'&&!db.fav)view.st='All';
+  if(view.st==='Review'&&!rvc)view.st='All';
+  if(view.st.indexOf('on:')===0&&!onTab())view.st='All';
+  if(view.g!=='All'&&db.tags.indexOf(view.g)<0)view.g='All';
+  if(view.t!=='All'&&db.ty.indexOf(view.t)<0)view.t='All';
+  var h=chip('All','All',db.items.length,'',view.st==='All');
+  db.st.forEach(function(o){h+=chip(o.n,esc(o.n),sc[o.n]||0,o.c,view.st===o.n)});
+  if(db.fav)h+=chip('Fav','♥ Favorites',fc,'',view.st==='Fav');
+  if(rvc)h+=chip('Review','⚠ Needs review',rvc,'',view.st==='Review');
+  db.on.forEach(function(o){h+=chip('on:'+o.id,(o.k==='airing'?'🔥 ':'🗓 ')+esc(o.n),null,o.c,view.st==='on:'+o.id)});
+  h+='<button class="ch plus" data-st="+" aria-label="Add tab">＋</button>';
+  $('chips').innerHTML=h;
+  var ot=onTab();
+  document.querySelector('.ctl').style.display=ot?'none':'flex';
+  $('q').style.display=ot?'none':'block';
+  $('onbar').style.display=ot?'flex':'none';
+  if(ot){$('cnt').textContent='';renderOnline(ot);return}
+  $('gsel').innerHTML='<option value="All">All genres</option>'+db.tags.map(function(g){return '<option value="'+esc(g)+'">'+esc(g)+'</option>'}).join('');
+  $('gsel').value=view.g;
+  $('tsel').innerHTML='<option value="All">All types</option>'+db.ty.map(function(t){return '<option value="'+esc(t)+'">'+esc(t)+'</option>'}).join('');
+  $('tsel').value=view.t;
+  var list=filtered();
+  $('cnt').textContent=list.length+' / '+db.items.length;
+  var html='',un=db.items.filter(function(x){return !x.ai}).length;
+  if(un&&db.ban!==0&&view.st==='All'&&!view.q)html+='<div class="warn"><b>Get posters, genres and seasons automatically</b><br>'+un+' anime have no online info yet. Auto-sort checks 3 websites and fills it in.<div class="row"><div><button class="btn pri" data-act="asopen">Auto-sort now</button></div><div><button class="btn" data-act="banx">Not now</button></div></div></div>';
+  if(view.sort==='type'){
+    var last=null,tc={};list.forEach(function(x){tc[x.ty]=(tc[x.ty]||0)+1});
+    list.forEach(function(x){if(x.ty!==last){last=x.ty;html+='<div class="gh">'+esc(x.ty||'No type')+' <b>· '+tc[x.ty]+'</b></div>'}html+=card(x)});
+  }else if(view.sort==='genre'){
+    var gm={},none=[];
+    list.forEach(function(x){if(!x.g.length)none.push(x);x.g.forEach(function(g){(gm[g]=gm[g]||[]).push(x)})});
+    Object.keys(gm).sort().forEach(function(g){html+='<div class="gh">'+esc(g)+' <b>· '+gm[g].length+'</b></div>'+gm[g].map(card).join('')});
+    if(none.length)html+='<div class="gh">No genre <b>· '+none.length+'</b></div>'+none.map(card).join('');
+  }else html+=list.map(card).join('');
+  $('list').innerHTML=list.length?html:html+'<div class="empty">Nothing here.<br>Change the filters or tap + to add one.</div>';
+}
+
+/* ================= sheets ================= */
+function openSheet(h){$('sh').innerHTML=h;$('ov').className='on';$('sh').scrollTop=0}
+function closeSheet(){$('ov').className='';editing=null;if(auto)auto.stop=true}
+function selOpts(vals,cur,none){return (none?'<option value="">'+none+'</option>':'')+vals.map(function(v){return '<option value="'+esc(v)+'"'+(v===cur?' selected':'')+'>'+esc(v)+'</option>'}).join('')}
+function edit(id){
+  editing=id||null;formExtra=null;
+  var x=id?find(id):{t:'',s:defStatus(),r:0,g:[],ty:'TV',e:0,te:0,n:'',f:false};
+  var rs='<option value="0">Unrated</option>';for(var i=10;i>=1;i--)rs+='<option value="'+i+'"'+(x.r===i?' selected':'')+'>'+i+' / 10</option>';
+  var tl=db.ty.slice();if(x.ty&&tl.indexOf(x.ty)<0)tl.push(x.ty);
+  var gl=db.tags.slice();x.g.forEach(function(g){if(gl.indexOf(g)<0)gl.push(g)});
+  var gc=gl.map(function(g){return '<button type="button" class="gc'+(x.g.indexOf(g)>=0?' on':'')+'" data-g="'+esc(g)+'">'+esc(g)+'</button>'}).join('');
+  openSheet('<h3>'+(id?'Edit anime':'Add anime')+'</h3>'
+   +'<label>Title (type it, then tap Find to fill everything automatically)</label><div class="row"><div><input id="f_t" value="'+esc(x.t)+'" autocomplete="off"></div><div style="flex:none;width:96px"><button type="button" class="btn" style="margin:0;padding:12px" data-act="lookup">🔍 Find</button></div></div><div id="fr"></div>'
+   +'<div class="row"><div><label>Status</label><select id="f_s">'+selOpts(stNames(),x.s,'(none)')+'</select></div><div><label>Rating</label><select id="f_r">'+rs+'</select></div></div>'
+   +'<div class="row"><div><label>Type</label><select id="f_ty">'+selOpts(tl,x.ty,'(none)')+'</select></div><div><label>Or new type</label><input id="f_nty" placeholder="e.g. Web series" autocomplete="off"></div></div>'
+   +'<div class="row"><div><label>Eps watched</label><input id="f_e" type="number" min="0" inputmode="numeric" value="'+x.e+'"></div>'
+   +'<div><label>Total eps</label><input id="f_te" type="number" min="0" inputmode="numeric" value="'+x.te+'"></div></div>'
+   +'<label>Genres / tags (an anime can have many)</label><div id="gcs">'+gc+'</div>'
+   +'<div class="row" style="margin-top:8px"><div><input id="f_nt" placeholder="New tag..." autocomplete="off"></div><div style="flex:none;width:90px"><button type="button" class="btn" style="margin:0;padding:11px" data-act="addtag">Add</button></div></div>'
+   +'<label>Notes</label><textarea id="f_n" rows="3">'+esc(x.n)+'</textarea>'
+   +(db.fav?'<label class="ck"><input type="checkbox" id="f_f"'+(x.f?' checked':'')+'> Favorite</label>':'')
+   +'<button class="btn pri" data-act="save">Save</button>'
+   +(id?'<button class="btn dng" data-act="delid" data-id="'+id+'">🗑 Delete this anime</button>':'')
+   +'<button class="btn" data-act="cancel">Cancel</button>');
+}
+function metaLine(x){var m=[x.ty];var tv=tvCount(x);if(tv>1)m.push(tv+' seasons');if(x.te)m.push(x.te+' eps');if(x.s)m.push(x.s);if(x.r)m.push('★ '+x.r+'/10');return esc(m.filter(Boolean).join(' · '))}
+function detail(id){
+  var x=find(id);if(!x)return;detailId=id;
+  var tv=0,sc=(x.sc||[]).map(function(s){var lb=s.ty==='TV'?'Season '+(++tv):(s.ty||'Other');return '<div class="sr"><span style="color:var(--tx);font-size:14px"><b>'+esc(lb)+'</b> · '+esc(s.n)+'</span><span>'+esc([s.y,s.eps?s.eps+' eps':''].filter(Boolean).join(' · '))+'</span></div>'}).join('');
+  openSheet('<div class="dh">'+(x.poster?'<img src="'+esc(x.poster)+'" alt="">':'')+'<div><div class="big" style="margin-top:0">'+esc(x.t)+'</div><div class="hint">'+metaLine(x)+'</div></div></div>'
+   +(x.rv?'<div class="warn" style="margin-top:12px">⚠ <b>Needs review.</b> The websites did not clearly agree on this one. Check the info. If it is wrong, tap Edit then Find and pick the right match.<button class="btn" data-act="rvok" data-id="'+id+'">Looks correct</button></div>':'')
+   +(x.g.length?'<div class="tg" style="margin-top:12px">'+x.g.map(function(g){return '<span>'+esc(g)+'</span>'}).join('')+'</div>':'')
+   +(x.syn?'<p class="syn">'+esc(x.syn)+'</p>':'')
+   +(x.n?'<label>My notes</label><div class="hint" style="color:var(--tx)">'+esc(x.n)+'</div>':'')
+   +'<div id="scw"><label>Seasons &amp; related</label>'+(sc||'<p class="hint" id="scm">'+(x.alId?'Loading seasons...':'No season info yet. Tap Refresh info.')+'</p>')+'</div>'
+   +'<div class="row"><div><button class="btn pri" data-act="editid" data-id="'+id+'">✏ Edit</button></div><div><button class="btn" data-act="refresh" data-id="'+id+'">↻ Refresh info</button></div></div>'
+   +'<button class="btn dng" data-act="delid" data-id="'+id+'">🗑 Delete this anime</button>'
+   +'<button class="btn" data-act="cancel">Close</button>');
+  if(x.alId&&!x.scFull)loadSeasons(x);
+}
+function cardMenu(id){
+  var x=find(id);if(!x)return;
+  openSheet('<h3>'+esc(x.t)+'</h3><button class="btn" data-act="detailid" data-id="'+id+'">📖 Open details</button><button class="btn" data-act="editid" data-id="'+id+'">✏ Edit</button><button class="btn dng" data-act="delid" data-id="'+id+'">🗑 Delete</button><button class="btn" data-act="cancel">Cancel</button>');
+}
+function menu(){
+  openSheet('<h3>Menu</h3>'
+   +'<button class="btn" data-act="asopen">✨ Auto-sort my list</button>'
+   +'<button class="btn" data-act="conntest">\ud83d\udd0c Test internet connection</button>'
+   +'<button class="btn" data-act="addtabsheet">＋ Add a tab</button>'
+   +'<button class="btn" data-act="customize">🛠 Customize (statuses, types, tags)</button>'
+   +'<button class="btn" data-act="random">🎲 Random pick</button>'
+   +'<button class="btn" data-act="backup">💾 Backup &amp; restore</button>'
+   +'<label>Accent color</label><div class="sw">'+COL.map(function(c){return '<i data-act="color" data-c="'+c+'" style="background:'+c+'"></i>'}).join('')+'</div>'
+   +'<button class="btn dng" data-act="reset">♻ Reset anime to starter list</button>'
+   +'<p class="hint">Tip: hold any tab or any anime card to rename, recolor or delete it. Your list is stored on this phone; back it up now and then.</p>'
+   +'<button class="btn" data-act="cancel">Close</button>');
+}
+function customize(){
+  openSheet('<h3>Customize</h3><p class="hint">Add, rename or delete anything. Deleting a status, type or tag never deletes your anime; they just lose that label.</p>'
+   +'<button class="btn" data-act="list" data-kind="st">Statuses ('+db.st.length+')</button>'
+   +'<button class="btn" data-act="list" data-kind="ty">Types ('+db.ty.length+')</button>'
+   +'<button class="btn" data-act="list" data-kind="tg">Genres / tags ('+db.tags.length+')</button>'
+   +'<button class="btn" data-act="favtoggle">♥ Favorites: '+(db.fav?'ON (tap to remove)':'OFF (tap to bring back)')+'</button>'
+   +'<button class="btn pri" data-act="menu">Back</button>');
+}
+var KN={st:'Statuses',ty:'Types',tg:'Genres / tags'};
+function L(k){return k==='st'?stNames():k==='ty'?db.ty:db.tags}
+function listSheet(k){
+  var rows=L(k).map(function(n,i){
+    return '<div class="rw">'+(k==='st'?'<input type="color" data-kind="st" data-i="'+i+'" data-f="c" value="'+esc(db.st[i].c)+'">':'')
+     +'<input type="text" data-kind="'+k+'" data-i="'+i+'" data-f="n" value="'+esc(n)+'" autocomplete="off">'
+     +'<button class="btn dng x" data-act="rowdel" data-kind="'+k+'" data-i="'+i+'">✕</button></div>'}).join('');
+  openSheet('<h3>'+KN[k]+'</h3><p class="hint">Edit a name and tap outside the box to rename it everywhere. ✕ deletes it.</p>'+rows
+   +'<div class="rw" style="margin-top:14px"><input id="newrow" placeholder="Add new..." autocomplete="off"><button class="btn pri x" style="width:80px" data-act="rowadd" data-kind="'+k+'">Add</button></div>'
+   +'<button class="btn" data-act="customize">Done</button>');
+}
+function badName(k,v,skip){
+  if(!v)return 'Enter a name';
+  if(k==='st'&&(v==='All'||v==='Fav'||v==='Review'||v==='+'||v.indexOf('on:')===0))return 'That name is reserved';
+  if(L(k).some(function(n,j){return j!==skip&&n.toLowerCase()===v.toLowerCase()}))return 'Already exists';
+  return '';
+}
+function renameIn(k,i,nv){
+  var old=L(k)[i];
+  if(k==='st'){db.st[i].n=nv;db.items.forEach(function(x){if(x.s===old)x.s=nv});if(view.st===old)view.st=nv}
+  else if(k==='ty'){db.ty[i]=nv;db.items.forEach(function(x){if(x.ty===old)x.ty=nv});if(view.t===old)view.t=nv}
+  else{db.tags[i]=nv;db.items.forEach(function(x){x.g=uniq(x.g.map(function(g){return g===old?nv:g}))});if(view.g===old)view.g=nv}
+}
+function removeIn(k,i){
+  var name=L(k)[i];
+  if(k==='st'){db.st.splice(i,1);db.items.forEach(function(x){if(x.s===name)x.s=''});if(view.st===name)view.st='All'}
+  else if(k==='ty'){db.ty.splice(i,1);db.items.forEach(function(x){if(x.ty===name)x.ty=''});if(view.t===name)view.t='All'}
+  else{db.tags.splice(i,1);db.items.forEach(function(x){x.g=x.g.filter(function(g){return g!==name})});if(view.g===name)view.g='All'}
+}
+function usedBy(k,name){return db.items.filter(function(x){return k==='st'?x.s===name:k==='ty'?x.ty===name:x.g.indexOf(name)>=0}).length}
+function rowEdit(t){
+  var k=t.getAttribute('data-kind'),i=+t.getAttribute('data-i'),f=t.getAttribute('data-f');
+  if(f==='c'){db.st[i].c=t.value;persist();render();return}
+  var nv=t.value.trim(),old=L(k)[i];
+  if(nv===old)return;
+  var bad=badName(k,nv,i);if(bad){toast(bad);listSheet(k);return}
+  renameIn(k,i,nv);persist();render();toast('Renamed');
+}
+function rowDel(b){
+  var k=b.getAttribute('data-kind'),i=+b.getAttribute('data-i'),name=L(k)[i],n=usedBy(k,name);
+  if(!confirm('Delete "'+name+'"?'+(n?' '+n+' anime use it and will lose this label (they are NOT deleted).':'')))return;
+  removeIn(k,i);persist();render();listSheet(k);toast('Deleted');
+}
+function rowAdd(b){
+  var k=b.getAttribute('data-kind'),v=$('newrow').value.trim(),bad=badName(k,v,-1);
+  if(bad){toast(bad);return}
+  if(k==='st')db.st.push({n:v,c:COL[db.st.length%COL.length]});else if(k==='ty')db.ty.push(v);else db.tags.push(v);
+  persist();render();listSheet(k);toast('Added');
+}
+
+/* ================= tabs (long-press + plus) ================= */
+function tabSheet(k){
+  if(k==='All'){toast('"All" is always there');return}
+  if(k==='Review'){toast('This tab appears by itself when something needs review');return}
+  if(k==='+')return;
+  if(k==='Fav'){openSheet('<h3>Favorites tab</h3><p class="hint">Hide the Favorites tab and the heart buttons? You can bring it back with the ＋ tab button.</p><button class="btn dng" data-act="tabdel" data-key="Fav">Hide Favorites</button><button class="btn" data-act="cancel">Cancel</button>');return}
+  var on=k.indexOf('on:')===0;
+  var t=on?db.on.filter(function(o){return 'on:'+o.id===k})[0]:db.st.filter(function(o){return o.n===k})[0];
+  if(!t)return;
+  openSheet('<h3>Edit tab</h3><label>Name</label><input id="tn" value="'+esc(t.n)+'" autocomplete="off"><label>Color</label><div class="rw"><input type="color" id="tc" value="'+esc(t.c)+'"></div>'
+   +(on?'<p class="hint">Online tab: its list comes from the internet. Use the sort, genre and count boxes at the top of the tab to configure it.</p>':'')
+   +'<button class="btn pri" data-act="tabsave" data-key="'+esc(k)+'">Save</button><button class="btn dng" data-act="tabdel" data-key="'+esc(k)+'">🗑 Delete tab</button><button class="btn" data-act="cancel">Cancel</button>');
+}
+function addTabSheet(){
+  openSheet('<h3>Add a tab</h3><label>Name (optional for online tabs)</label><input id="tn" placeholder="e.g. Rewatch, Weekend..." autocomplete="off">'
+   +'<button class="btn" data-act="addtab" data-k="st">＋ My list tab (you add anime to it)</button>'
+   +'<button class="btn" data-act="addtab" data-k="airing">🔥 Top Airing (online, automatic)</button>'
+   +'<button class="btn" data-act="addtab" data-k="upcoming">🗓 Upcoming in 30 days (online)</button>'
+   +(db.fav?'':'<button class="btn" data-act="addtab" data-k="fav">♥ Favorites tab</button>')
+   +'<button class="btn" data-act="cancel">Cancel</button>');
+}
+
+/* ================= online data: 3 sources + voting ================= */
+function J(url,opt){
+  return new Promise(function(res,rej){
+    var done=false,ac=window.AbortController?new AbortController():null;
+    var tm=setTimeout(function(){if(ac)ac.abort();if(!done){done=true;rej(new Error('timeout'))}},14000);
+    var o=opt||{};if(ac)o.signal=ac.signal;
+    fetch(url,o).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(j){if(!done){done=true;clearTimeout(tm);res(j)}}).catch(function(e){if(!done){done=true;clearTimeout(tm);rej(e)}});
+  });
+}
+var CAN={'science fiction':'Sci-Fi','sci fi':'Sci-Fi','sci-fi':'Sci-Fi','magical girl':'Mahou Shoujo','suspense':'Thriller','award winning':''};
+function canon(n){n=String(n||'').trim();if(!n)return '';var k=n.toLowerCase();return CAN.hasOwnProperty(k)?CAN[k]:n}
+function mapType(t){if(!t)return '';t=String(t).toUpperCase().replace(/_/g,' ');if(t==='TV'||t==='TV SHORT')return 'TV';if(t==='MOVIE')return 'Movie';if(t==='OVA')return 'OVA';if(t==='ONA')return 'ONA';return 'Special'}
+function clean(s){return String(s||'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim().slice(0,700)}
+var ALF='id title{romaji english native} synonyms format episodes genres seasonYear coverImage{large} description(asHtml:false) averageScore startDate{year month day} nextAiringEpisode{episode airingAt}';
+function ALQ(query,vars){return J('https://graphql.anilist.co',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:query,variables:vars||{}})}).then(function(j){if(!j||!j.data)throw new Error('AniList');return j.data})}
+function mAL(a){var t=a.title||{};return{src:'al',id:a.id,names:[t.romaji,t.english,t.native].concat(a.synonyms||[]).filter(Boolean),name:t.english||t.romaji||'',ty:mapType(a.format),y:a.seasonYear||(a.startDate&&a.startDate.year)||'',te:a.episodes||0,g:uniq((a.genres||[]).map(canon)),poster:a.coverImage&&a.coverImage.large||'',syn:clean(a.description),score:a.averageScore||0,sd:a.startDate||null,nx:a.nextAiringEpisode||null}}
+function qAL(q){return ALQ('query($q:String){Page(perPage:5){media(search:$q,type:ANIME){'+ALF+'}}}',{q:q}).then(function(d){return d.Page.media.map(mAL)})}
+function qMAL(q){return J('https://api.jikan.moe/v4/anime?limit=5&q='+enc(q)).then(function(j){return (j.data||[]).map(function(a){
+  var g=[];['genres','explicit_genres'].forEach(function(k){(a[k]||[]).forEach(function(o){g.push(canon(o.name))})});
+  return{src:'mal',id:a.mal_id,names:[a.title,a.title_english,a.title_japanese].concat(a.title_synonyms||[]).filter(Boolean),name:a.title_english||a.title||'',ty:mapType(a.type),y:a.year||'',te:a.episodes||0,g:uniq(g),poster:a.images&&a.images.jpg&&a.images.jpg.image_url||'',syn:clean(a.synopsis)}})})}
+function qKI(q){return J('https://kitsu.io/api/edge/anime?filter%5Btext%5D='+enc(q)+'&page%5Blimit%5D=5&include=genres').then(function(j){
+  var gm={};(j.included||[]).forEach(function(o){if(o.type==='genres'&&o.attributes)gm[o.id]=o.attributes.name});
+  return (j.data||[]).map(function(d){var a=d.attributes||{},t=a.titles||{},ids=(d.relationships&&d.relationships.genres&&d.relationships.genres.data)||[];
+    return{src:'ki',id:d.id,names:[a.canonicalTitle,t.en,t.en_jp,t.en_us].concat(a.abbreviatedTitles||[]).filter(Boolean),name:t.en||a.canonicalTitle||'',ty:mapType(a.subtype),y:String(a.startDate||'').slice(0,4),te:a.episodeCount||0,g:uniq(ids.map(function(o){return canon(gm[o.id])})),poster:a.posterImage&&(a.posterImage.small||a.posterImage.medium)||'',syn:clean(a.synopsis)}})})}
+function tok(s){return String(s).toLowerCase().replace(/[^a-z0-9 ]+/g,' ').split(/\s+/).filter(function(w){return w&&w!=='the'&&w!=='a'&&w!=='of'&&w!=='no'&&w!=='wa'})}
+function sim(a,b){var A=tok(a),B=tok(b);if(!A.length||!B.length)return 0;var n=0;A.forEach(function(w){if(B.indexOf(w)>=0)n++});return Math.max(n/(A.length+B.length-n),0.85*n/Math.min(A.length,B.length))}
+function bestOf(arr,names){
+  var b=null;
+  arr.forEach(function(c,i){var s=0;names.forEach(function(n){c.names.forEach(function(m){s=Math.max(s,sim(n,m))})});s-=i*0.01;if(!b||s>b.s)b={c:c,s:s}});
+  return b&&b.s>=0.55?b:null;
+}
+function consensus(m){
+  var order=['al','mal','ki'],list=order.map(function(k){return m[k]}).filter(Boolean),n=list.length;
+  if(!n)return null;
+  var tv={},best='',bv=0;
+  list.forEach(function(b){var t=b.c.ty;if(t)tv[t]=(tv[t]||0)+1});
+  list.forEach(function(b){var t=b.c.ty;if(t&&tv[t]>bv){bv=tv[t];best=t}});
+  var gc={};list.forEach(function(b){b.c.g.forEach(function(g){gc[g]=(gc[g]||0)+1})});
+  var need=n>=2?2:1,g=[];
+  list.forEach(function(b){b.c.g.forEach(function(x){if(gc[x]>=need&&g.indexOf(x)<0)g.push(x)})});
+  g.sort(function(a,b){return gc[b]-gc[a]});
+  if(!g.length)g=list[0].c.g.slice(0,5);
+  var ev={},te=0,tb=0;list.forEach(function(b){var e=b.c.te;if(e)ev[e]=(ev[e]||0)+1});
+  list.forEach(function(b){var e=b.c.te;if(e&&ev[e]>tb){tb=ev[e];te=e}});
+  function first(k){for(var i=0;i<list.length;i++)if(list[i].c[k])return list[i].c[k];return ''}
+  var minSim=Math.min.apply(null,list.map(function(b){return b.s}));
+  var typeOk=n===1||bv>=2;
+  return{name:first('name'),ty:best,te:te,g:g.slice(0,7),poster:first('poster'),syn:first('syn'),alId:m.al?m.al.c.id:0,srcs:n,rv:(!typeOk||(n<2&&minSim<0.85))?1:0};
+}
+function enrich(q,hint){
+  var names=hint?hint.names.concat([q]):[q];
+  var sq=hint?hint.names[0]:q,fails=0,msgs=[];
+  function wrap(p,nm){return p.then(function(r){return r},function(e){fails++;msgs.push(nm+': '+(e&&e.message||'failed'));return []})}
+  var pa=hint&&hint.src==='al'?Promise.resolve([hint]):wrap(qAL(sq),'AniList');
+  return Promise.all([pa,wrap(qMAL(sq),'MyAnimeList'),wrap(qKI(sq),'Kitsu')]).then(function(r){
+    if(fails>=3)throw new Error(msgs.join('; '));
+    var m={al:bestOf(r[0],names),mal:bestOf(r[1],names),ki:bestOf(r[2],names)};
+    if(hint&&hint.src==='al')m.al={c:hint,s:1};
+    var c=consensus(m);if(c&&hint)c.rv=0;return c;
+  });
+}
+function applyInfo(x,r){
+  if(r.ty)x.ty=r.ty;
+  if(r.te){x.te=r.te;if(x.s==='Completed')x.e=r.te}
+  if(r.g.length)x.g=r.g;
+  if(r.poster)x.poster=r.poster;
+  if(r.syn)x.syn=r.syn;
+  if(r.alId&&r.alId!==x.alId){x.alId=r.alId;x.sc=[];x.scFull=0}
+  x.rv=r.rv?1:0;x.ai=1;x.srcs=r.srcs;
+}
+function enrichItem(x,silent){
+  if(!silent)toast('Checking 3 websites...');
+  return enrich(x.t,null).then(function(r){
+    if(!r){x.ai=2;x.rv=1;persist();render();if(!silent)toast('No match found online');return false}
+    applyInfo(x,r);persist();render();
+    if(!silent)toast('Updated'+(r.rv?' (please review)':''));
+    if(detailId===x.id&&$('ov').className==='on'&&$('scw'))detail(x.id);
+    return true;
+  }).catch(function(e){if(!silent){toast('Could not reach the websites. '+(navigator.onLine===false?'Phone is offline.':(e&&e.message||'')));testSheet(e&&e.message)}return false});
+}
+function crawl(id){
+  var seen={},out=[],queue=[id],n=0;
+  return new Promise(function(res,rej){
+    function fin(){out.sort(function(a,b){return a.k-b.k});res(out.map(function(o){return{id:o.id,n:o.n,ty:o.ty,y:o.y,eps:o.eps}}))}
+    function nx(){
+      if(!queue.length||n>=14)return fin();
+      var cur=queue.shift();if(seen[cur])return nx();seen[cur]=1;n++;
+      ALQ('query($id:Int){Media(id:$id,type:ANIME){id title{romaji english} format episodes seasonYear startDate{year month day} relations{edges{relationType node{id type}}}}}',{id:cur}).then(function(d){
+        var m=d.Media,t=m.title||{},sd=m.startDate||{};
+        out.push({id:m.id,n:t.english||t.romaji||'',ty:mapType(m.format),y:m.seasonYear||sd.year||'',eps:m.episodes||0,k:(sd.year||m.seasonYear||9999)*10000+(sd.month||0)*100+(sd.day||0)});
+        ((m.relations&&m.relations.edges)||[]).forEach(function(e){if((e.relationType==='PREQUEL'||e.relationType==='SEQUEL')&&e.node&&e.node.type==='ANIME'&&!seen[e.node.id])queue.push(e.node.id)});
+        setTimeout(nx,650);
+      }).catch(function(e){if(!out.length)rej(e);else fin()});
+    }
+    nx();
+  });
+}
+function loadSeasons(x){
+  crawl(x.alId).then(function(list){
+    x.sc=list;x.scFull=1;persist();render();
+    if(detailId===x.id&&$('ov').className==='on'&&$('scw'))detail(x.id);
+  }).catch(function(){var m=$('scm');if(m)m.textContent='Could not load seasons (needs internet).'});
+}
+
+function testSheet(prev){
+  openSheet('<h3>\ud83d\udd0c Connection test</h3><p class="hint" id="tr">Testing the 3 websites...</p><button class="btn" data-act="cancel">Close</button>');
+  var t=[['AniList',qAL],['MyAnimeList',qMAL],['Kitsu',qKI]],out=[];
+  Promise.all(t.map(function(p){return p[1]('naruto').then(function(r){return p[0]+': OK ('+r.length+' results)'},function(e){return p[0]+': FAILED - '+(e&&e.message||'error')})})).then(function(r){
+    var el=$('tr');if(!el)return;
+    el.innerHTML=r.map(esc).join('<br>')+'<br><br>Phone says online: '+(navigator.onLine?'yes':'NO')+'<br>App address: '+esc(location.protocol+'//'+(location.host||'(file)'))
+     +'<br><br>'+(r.every(function(x){return x.indexOf('OK')>0})?'All good. If one anime still fails, try a simpler title.':'If all say FAILED with "Failed to fetch", the phone is blocking the request or has no internet. Try mobile data or Wi-Fi, or open this in Chrome. Send me this screen if it keeps failing.');
+  });
+}
+/* ================= online tabs ================= */
+function dint(off){var d=new Date();d.setDate(d.getDate()+off);return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate()}
+var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fdate(sd){if(!sd||!sd.year)return '';return (sd.month?MON[sd.month-1]+' ':'')+(sd.day?sd.day+', ':'')+sd.year}
+function onlineQuery(t){
+  var c=t.cfg,gen=AG.indexOf(c.genre)>=0?',genre:"'+c.genre+'"':'';
+  var sorts=['POPULARITY_DESC','SCORE_DESC','TRENDING_DESC','START_DATE'],so=sorts.indexOf(c.sort)>=0?c.sort:'POPULARITY_DESC';
+  var args=t.k==='airing'?'status:RELEASING':'startDate_greater:'+dint(-1)+',startDate_lesser:'+dint(31);
+  return 'query{Page(perPage:'+([10,25,50].indexOf(+c.n)>=0?+c.n:25)+'){media(type:ANIME,isAdult:false,'+args+',sort:['+so+']'+gen+'){'+ALF+'}}}';
+}
+function ocard(x,i){
+  var inList=db.items.some(function(y){return (y.alId&&y.alId===x.id)||y.t.toLowerCase()===x.name.toLowerCase()});
+  var when=x.nx?'Ep '+x.nx.episode+' airs '+new Date(x.nx.airingAt*1000).toLocaleDateString():(fdate(x.sd)?'Starts '+fdate(x.sd):'');
+  var m=[x.ty,x.te?x.te+' eps':'',x.score?'★ '+(x.score/10).toFixed(1):''].filter(Boolean).join(' · ');
+  return '<div class="cd" data-oi="'+i+'" style="--c:'+(inList?'#4cd48a':'#8e92ad')+'">'+(x.poster?'<div class="ph"><img loading="lazy" src="'+esc(x.poster)+'" alt=""></div>':'')
+   +'<div class="mn"><div class="tt">'+esc(x.name)+'</div><div class="mt">'+esc(m)+'</div>'+(when?'<div class="mt" style="color:var(--acc)">'+esc(when)+'</div>':'')
+   +(x.g.length?'<div class="tg">'+x.g.slice(0,4).map(function(g){return '<span>'+esc(g)+'</span>'}).join('')+'</div>':'')+'</div>'
+   +'<div class="rt"><button class="add'+(inList?' in':'')+'" data-a="oadd">'+(inList?'✓ In list':'＋ Add')+'</button></div></div>';
+}
+function renderOnline(t){
+  var c=t.cfg,key=t.k+JSON.stringify(c);
+  var sorts=t.k==='airing'?[['POPULARITY_DESC','Most popular'],['SCORE_DESC','Top rated'],['TRENDING_DESC','Trending']]:[['POPULARITY_DESC','Most popular'],['START_DATE','Soonest first']];
+  function so(id,arr,cur){return '<select id="'+id+'">'+arr.map(function(p){return '<option value="'+p[0]+'"'+(String(p[0])===String(cur)?' selected':'')+'>'+p[1]+'</option>'}).join('')+'</select>'}
+  $('onbar').innerHTML=so('o_sort',sorts,c.sort)+so('o_gen',[['','All genres']].concat(AG.map(function(g){return [g,g]})),c.genre)+so('o_n',[[10,'10'],[25,'25'],[50,'50']],c.n)+'<button class="ch" id="o_ref" aria-label="Refresh">↻</button>';
+  var head=t.k==='upcoming'?'<p class="hint" style="margin-top:0">Anime releasing from today until '+fdate({year:Math.floor(dint(30)/10000),month:Math.floor(dint(30)/100)%100,day:dint(30)%100})+' (next 30 days).</p>':'<p class="hint" style="margin-top:0">Anime airing right now.</p>';
+  function draw(list){
+    if(view.st!=='on:'+t.id)return;olist=list;
+    $('cnt').textContent=list.length+' shown';
+    $('list').innerHTML=head+(list.length?list.map(ocard).join(''):'<div class="empty">Nothing found for these filters.</div>');
+  }
+  if(ocache[key]){draw(ocache[key]);return}
+  $('list').innerHTML='<div class="empty">Loading from the internet...</div>';
+  ALQ(onlineQuery(t)).then(function(d){var l=d.Page.media.map(mAL);ocache[key]=l;draw(l)}).catch(function(e){
+    if(view.st==='on:'+t.id)$('list').innerHTML='<div class="empty">This tab needs internet ('+esc(e&&e.message||'offline')+').<br>Tap ↻ to try again.</div>'});
+}
+function onlineDetail(i){
+  var x=olist[i];if(!x)return;
+  var inList=db.items.some(function(y){return (y.alId&&y.alId===x.id)||y.t.toLowerCase()===x.name.toLowerCase()});
+  openSheet('<div class="dh">'+(x.poster?'<img src="'+esc(x.poster)+'" alt="">':'')+'<div><div class="big" style="margin-top:0">'+esc(x.name)+'</div><div class="hint">'+esc([x.ty,x.te?x.te+' eps':'',fdate(x.sd)].filter(Boolean).join(' · '))+'</div></div></div>'
+   +(x.g.length?'<div class="tg" style="margin-top:12px">'+x.g.map(function(g){return '<span>'+esc(g)+'</span>'}).join('')+'</div>':'')
+   +(x.syn?'<p class="syn">'+esc(x.syn)+'</p>':'')
+   +(inList?'<button class="btn" data-act="cancel">✓ Already in your list. Close</button>':'<button class="btn pri" data-act="oaddi" data-i="'+i+'">＋ Add to my list</button><button class="btn" data-act="cancel">Close</button>'));
+}
+function addOnline(i){
+  var x=olist[i];if(!x)return;
+  var n=norm({t:x.name,s:planStatus(),ty:x.ty,te:x.te,g:x.g,poster:x.poster,syn:x.syn,alId:x.id,ai:1,c:nextC()},0);
+  db.items.push(n);persist();render();toast('Added to '+(n.s||'your list'));
+}
+
+/* ================= backup / random ================= */
+function backupJSON(){return JSON.stringify({app:'anime-vault',v:3,exported:new Date().toISOString(),acc:db.acc,st:db.st,ty:db.ty,tags:db.tags,fav:db.fav,on:db.on,items:db.items},null,1)}
+function backup(){
+  openSheet('<h3>Backup &amp; restore</h3>'
+   +'<p class="hint">Save the backup somewhere safe. To restore, paste backup text into the box (or choose a file) and tap Restore.</p>'
+   +'<textarea id="bk" rows="6">'+esc(backupJSON())+'</textarea>'
+   +'<div class="row"><button class="btn" data-act="dl">'+(window.Android?'⬆ Share / save':'⬇ Download file')+'</button><button class="btn" data-act="copy">Copy text</button></div>'
+   +'<label>Restore from a backup file</label><input type="file" id="bkf" accept=".json,application/json,text/plain">'
+   +'<button class="btn dng" data-act="restoretext">Restore from text box</button>'
+   +'<button class="btn" data-act="cancel">Close</button>');
+}
+function doRestore(txt){
+  var d;try{d=JSON.parse(txt)}catch(e){toast('Not a valid backup');return}
+  var arr=Array.isArray(d)?d:(d&&d.items);
+  if(!Array.isArray(arr)||!arr.length||arr.some(function(x){return !x||typeof x.t!=='string'})){toast('No valid list in that backup');return}
+  if(!confirm('Replace your current list with '+arr.length+' anime from this backup?'))return;
+  db.items=arr.map(norm);
+  if(d&&!Array.isArray(d)){
+    if(d.acc)db.acc=d.acc;
+    if(Array.isArray(d.st)&&d.st.every(function(o){return o&&typeof o.n==='string'}))db.st=d.st.map(function(o){return{n:o.n,c:o.c||'#8e92ad'}});
+    if(Array.isArray(d.ty))db.ty=d.ty.map(String);
+    if(Array.isArray(d.tags))db.tags=d.tags.map(String);
+    if(typeof d.fav==='boolean')db.fav=d.fav;
+    if(Array.isArray(d.on)&&d.on.every(function(o){return o&&o.id&&o.cfg}))db.on=d.on;
+  }
+  applyAcc();persist();closeSheet();render();toast('Restored '+arr.length+' anime');
+}
+function pickMenu(){
+  var rows='<button class="btn pri" data-act="pickfrom" data-k="*">🎲 Any anime ('+db.items.length+')</button>';
+  db.st.forEach(function(o,i){var n=db.items.filter(function(x){return x.s===o.n}).length;rows+='<button class="btn" data-act="pickfrom" data-k="s'+i+'">From '+esc(o.n)+' ('+n+')</button>'});
+  if(db.fav)rows+='<button class="btn" data-act="pickfrom" data-k="f">From Favorites ('+db.items.filter(function(x){return x.f}).length+')</button>';
+  openSheet('<h3>🎲 Random pick</h3><p class="hint">Choose where to pick from.</p>'+rows+'<button class="btn" data-act="cancel">Close</button>');
+}
+function pickFrom(k){
+  pickKey=k;
+  var pool=db.items.filter(function(x){return k==='*'?true:k==='f'?x.f:x.s===(db.st[+k.slice(1)]||{}).n});
+  if(!pool.length){toast('Nothing there yet');return}
+  var x,tries=0;do{x=pool[Math.floor(Math.random()*pool.length)];tries++}while(pool.length>1&&x.id===pickId&&tries<10);
+  pickId=x.id;
+  openSheet('<h3>🎲 How about this one?</h3><div class="dh">'+(x.poster?'<img src="'+esc(x.poster)+'" alt="">':'')+'<div><div class="big" style="margin-top:0">'+esc(x.t)+'</div>'
+   +'<div class="hint">'+esc([x.ty,x.s].filter(Boolean).join(' · '))+(x.g.length?' · '+esc(x.g.join(', ')):'')+'</div></div></div>'
+   +'<button class="btn pri" data-act="pickagain">Pick another</button>'
+   +'<button class="btn" data-act="openpick">Open details</button>'
+   +'<button class="btn" data-act="random">Change where to pick from</button>'
+   +'<button class="btn" data-act="cancel">Close</button>');
+}
+
+/* ================= auto-sort ================= */
+function asSheet(){
+  var un=db.items.filter(function(x){return !x.ai}).length;
+  function ch(act,v,cur,label){return '<button class="btn'+(cur===v?' sel':'')+'" data-act="'+act+'" data-v="'+v+'">'+label+'</button>'}
+  openSheet('<h3>✨ Auto-sort</h3><p class="hint">Checks 3 websites (AniList, MyAnimeList, Kitsu) for each anime. Info that at least 2 of them agree on is used for type and genres. Unsure ones go to a "Needs review" tab. Needs internet; about 1 second per anime.</p>'
+   +'<label>1. Which anime?</label>'+ch('as_scope','new',asOpt.scope,'Only anime without info yet ('+un+')')+ch('as_scope','all',asOpt.scope,'All anime ('+db.items.length+')')
+   +'<label>2. Then arrange the list by</label><div class="row"><div>'+ch('as_by','type',asOpt.by,'Type')+'</div><div>'+ch('as_by','genre',asOpt.by,'Genre')+'</div></div><div class="row"><div>'+ch('as_by','status',asOpt.by,'Status')+'</div><div>'+ch('as_by','az',asOpt.by,'A → Z')+'</div></div>'
+   +'<button class="btn pri" data-act="asgo">Start</button><button class="btn" data-act="cancel">Close</button>');
+}
+function finishAuto(msg){if($('ap'))openSheet('<h3>✨ Auto-sort</h3><p class="hint">'+esc(msg)+'</p><button class="btn pri" data-act="cancel">Close</button>')}
+function autoSort(all,by){
+  if(auto){toast('Already running');return}
+  var todo=db.items.filter(function(x){return all||!x.ai});
+  if(!todo.length){toast('Everything already has info. Choose "All anime" to redo.');return}
+  auto={stop:false};var me=auto,i=0,hit=0,rev=0,miss=0,tries=0,total=todo.length,err='';
+  openSheet('<h3>✨ Auto-sorting</h3><p class="hint" id="ap">Starting...</p><p class="hint">Keep the app open. You can stop any time; progress is kept.</p><button class="btn" data-act="autostop">Stop</button>');
+  function end(m){if(auto===me)auto=null;view.sort=by;view.st='All';$('sort').value=by;persist();render();finishAuto(m)}
+  function step(){
+    if(me.stop){end('Stopped. '+hit+' updated so far. Run Auto-sort again to continue.');return}
+    if(i>=total){end('Done. '+hit+' updated'+(rev?', '+rev+' need review':'')+(miss?', '+miss+' not found':'')+'. List arranged by '+(by==='az'?'A to Z':by)+'.');return}
+    var x=todo[i];if($('ap'))$('ap').textContent=(i+1)+' / '+total+' · '+x.t;
+    enrich(x.t,null).then(function(r){
+      tries=0;
+      if(r){applyInfo(x,r);hit++;if(r.rv)rev++}else{x.ai=2;x.rv=1;miss++}
+      i++;persist();setTimeout(step,1100);
+    }).catch(function(e){
+      err=e&&e.message||'';tries++;
+      if(tries>3){end('Stopped after '+hit+' updates: could not reach the websites'+(err?' ('+err+')':'')+'. Check your internet and run Auto-sort again; it continues where it stopped.');return}
+      setTimeout(step,3000*tries);
+    });
+  }
+  step();
+}
+
+/* ================= actions ================= */
+function addChip(v){
+  var ex=[].slice.call(document.querySelectorAll('#gcs .gc')).filter(function(b){return b.getAttribute('data-g').toLowerCase()===v.toLowerCase()})[0];
+  if(ex){ex.classList.add('on')}else{var b=document.createElement('button');b.type='button';b.className='gc on';b.setAttribute('data-g',v);b.textContent=v;$('gcs').appendChild(b)}
+}
+function removeAnime(id){
+  var x=find(id);if(!x)return;
+  if(!confirm('Delete "'+x.t+'" from your list?'))return;
+  db.items=db.items.filter(function(i){return i.id!==id});
+  persist();closeSheet();render();toast('Deleted');
+}
+function searchList(q){return qAL(q).then(function(r){if(r.length)return r;throw new Error('none')}).catch(function(){return qMAL(q)}).catch(function(){return qKI(q)})}
+var acts={
+  cancel:function(){closeSheet()},
+  menu:menu,customize:customize,
+  list:function(b){listSheet(b.getAttribute('data-kind'))},
+  rowdel:rowDel,rowadd:rowAdd,
+  favtoggle:function(){db.fav=!db.fav;persist();render();customize()},
+  addtabsheet:addTabSheet,
+  addtab:function(b){
+    var k=b.getAttribute('data-k'),nm=($('tn').value||'').trim();
+    if(k==='fav'){db.fav=true;persist();render();closeSheet();toast('Favorites tab is back');return}
+    if(k==='st'){var bad=badName('st',nm,-1);if(bad){toast(bad);return}db.st.push({n:nm,c:COL[db.st.length%COL.length]});view.st=nm;persist();render();closeSheet();toast('Tab added. Move anime into it with the status badge.');return}
+    var t={id:uid(),k:k,n:nm||(k==='airing'?'Top Airing':'Upcoming 30d'),c:COL[(db.st.length+db.on.length)%COL.length],cfg:{sort:'POPULARITY_DESC',genre:'',n:25}};
+    db.on.push(t);view.st='on:'+t.id;persist();render();closeSheet();
+  },
+  tabsave:function(b){
+    var k=b.getAttribute('data-key'),nv=($('tn').value||'').trim(),col=$('tc').value;
+    if(k.indexOf('on:')===0){var t=db.on.filter(function(o){return 'on:'+o.id===k})[0];if(!t)return;if(!nv){toast('Enter a name');return}t.n=nv;t.c=col;persist();render();closeSheet();return}
+    var i=stNames().indexOf(k);if(i<0)return;
+    if(nv!==k){var bad=badName('st',nv,i);if(bad){toast(bad);return}renameIn('st',i,nv)}
+    db.st[i].c=col;persist();render();closeSheet();toast('Saved');
+  },
+  tabdel:function(b){
+    var k=b.getAttribute('data-key');
+    if(k==='Fav'){if(!confirm('Hide the Favorites tab?'))return;db.fav=false;view.st='All';persist();render();closeSheet();return}
+    if(k.indexOf('on:')===0){if(!confirm('Delete this online tab?'))return;db.on=db.on.filter(function(o){return 'on:'+o.id!==k});view.st='All';persist();render();closeSheet();toast('Tab deleted');return}
+    var i=stNames().indexOf(k),n=usedBy('st',k);
+    if(!confirm('Delete tab "'+k+'"?'+(n?' '+n+' anime use it and will have no status (they are NOT deleted).':'')))return;
+    removeIn('st',i);persist();render();closeSheet();toast('Tab deleted');
+  },
+  lookup:function(){
+    var q=$('f_t').value.trim();if(!q){toast('Type a title first');return}
+    $('fr').innerHTML='<p class="hint">Searching...</p>';
+    searchList(q).then(function(r){
+      var fr=$('fr');if(!fr)return;lastRes=r;
+      fr.innerHTML=r.length?'<p class="hint">Tap the right one:</p>'+r.map(function(x,i){return '<button class="btn fi" data-act="useinfo" data-i="'+i+'">'+(x.poster?'<img src="'+esc(x.poster)+'" alt="">':'')+'<span><b>'+esc(x.name)+'</b><br><span style="font-size:12px;color:var(--mu)">'+esc([x.ty,x.y,x.te?x.te+' eps':''].filter(Boolean).join(' · '))+'</span></span></button>'}).join(''):'<p class="hint">No match found. Fill it in by hand.</p>';
+    }).catch(function(e){var fr=$('fr');if(fr)fr.innerHTML='<p class="hint">Could not reach the websites ('+esc(e&&e.message||'offline')+'). Check your internet, or fill it in by hand.</p>'});
+  },
+  useinfo:function(b){
+    var c=lastRes[+b.getAttribute('data-i')];if(!c)return;
+    $('fr').innerHTML='<p class="hint">Checking 3 websites for genres and type...</p>';
+    enrich(c.name,c).then(function(r){
+      if(!$('fr'))return;
+      r=r||{name:c.name,ty:c.ty,te:c.te,g:c.g,poster:c.poster,syn:c.syn,alId:c.src==='al'?c.id:0,srcs:1,rv:0};
+      $('f_t').value=c.name||r.name||$('f_t').value;
+      if(r.ty){var sel=$('f_ty');if([].some.call(sel.options,function(o){return o.value===r.ty})){sel.value=r.ty;$('f_nty').value=''}else{$('f_nty').value=r.ty}}
+      if(r.te)$('f_te').value=r.te;
+      if(r.g.length){[].slice.call(document.querySelectorAll('#gcs .gc')).forEach(function(g){g.classList.remove('on')});r.g.forEach(addChip)}
+      formExtra={poster:r.poster,syn:r.syn,alId:r.alId,srcs:r.srcs,rv:0,ai:1};
+      $('fr').innerHTML='<p class="hint">✓ Filled in from '+r.srcs+' website'+(r.srcs>1?'s':'')+': '+esc(r.ty||'')+', '+esc(r.g.join(', ')||'no genres found')+'. Check, then Save.</p>';
+    }).catch(function(){var fr=$('fr');if(fr)fr.innerHTML='<p class="hint">Could not reach the websites. Check your internet.</p>'});
+  },
+  conntest:function(){testSheet()},
+  asopen:asSheet,
+  as_scope:function(b){asOpt.scope=b.getAttribute('data-v');asSheet()},
+  as_by:function(b){asOpt.by=b.getAttribute('data-v');asSheet()},
+  asgo:function(){autoSort(asOpt.scope==='all',asOpt.by)},
+  autostop:function(){if(auto)auto.stop=true},
+  banx:function(){db.ban=0;persist();render()},
+  addtag:function(){var i=$('f_nt'),v=i.value.trim();if(!v)return;addChip(v);i.value=''},
+  save:function(){
+    var t=$('f_t').value.trim();if(!t){toast('Enter a title');return}
+    var g=[].slice.call(document.querySelectorAll('#gcs .gc.on')).map(function(b){return b.getAttribute('data-g')});
+    var x=editing?find(editing):null,isNew=!x;
+    if(isNew){x=norm({t:t,c:nextC()},0);db.items.push(x)}
+    x.t=t;x.s=$('f_s').value;x.r=+$('f_r').value;x.ty=$('f_nty').value.trim()||$('f_ty').value;
+    x.e=Math.max(0,+$('f_e').value||0);x.te=Math.max(0,+$('f_te').value||0);
+    x.g=g;x.n=$('f_n').value.trim();if($('f_f'))x.f=$('f_f').checked;x.u=Date.now();
+    if(formExtra){x.poster=formExtra.poster||x.poster;x.syn=formExtra.syn||x.syn;if(formExtra.alId&&formExtra.alId!==x.alId){x.alId=formExtra.alId;x.sc=[];x.scFull=0}x.rv=0;x.ai=1;x.srcs=formExtra.srcs||0}
+    formExtra=null;
+    persist();closeSheet();render();toast(isNew?'Added':'Saved');
+    if(isNew&&!x.ai&&!x.g.length)enrichItem(x,true).then(function(ok){if(ok)toast('Info filled in automatically')});
+  },
+  delid:function(b){removeAnime(b.getAttribute('data-id'))},
+  detailid:function(b){detail(b.getAttribute('data-id'))},
+  editid:function(b){edit(b.getAttribute('data-id'))},
+  refresh:function(b){var x=find(b.getAttribute('data-id'));if(x)enrichItem(x,false)},
+  rvok:function(b){var x=find(b.getAttribute('data-id'));if(x){x.rv=0;persist();render();detail(x.id)}},
+  oaddi:function(b){addOnline(+b.getAttribute('data-i'));closeSheet()},
+  random:pickMenu,
+  pickfrom:function(b){pickFrom(b.getAttribute('data-k'))},
+  pickagain:function(){pickFrom(pickKey)},
+  openpick:function(){if(pickId&&find(pickId))detail(pickId)},
+  backup:backup,
+  dl:function(){
+    if(window.Android&&Android.share){Android.share(backupJSON());return}
+    var b=new Blob([backupJSON()],{type:'application/json'}),a=document.createElement('a');
+    a.href=URL.createObjectURL(b);a.download='anime-vault-backup.json';document.body.appendChild(a);a.click();
+    setTimeout(function(){a.remove()},800);toast('Saving backup file...');
+  },
+  copy:function(){var t=$('bk');t.focus();t.select();try{t.setSelectionRange(0,t.value.length)}catch(e){}
+    try{document.execCommand('copy');toast('Copied')}catch(e){toast('Select all and copy manually')}},
+  restoretext:function(){doRestore($('bk').value)},
+  color:function(b){db.acc=b.getAttribute('data-c');applyAcc();persist();toast('Color changed')},
+  reset:function(){
+    if(!confirm('Replace your whole anime list with the original starter list (all Completed)? This erases your changes.'))return;
+    db.items=seed();persist();closeSheet();render();toast('List reset');
+  }
+};
+
+/* ================= events ================= */
+function lp(el,cb){
+  var t=null,fired=false,sx=0,sy=0;
+  function fire(tg){if(fired)return;fired=true;cb(tg)}
+  el.addEventListener('touchstart',function(e){fired=false;var p=e.touches[0];sx=p.clientX;sy=p.clientY;var tg=e.target;clearTimeout(t);t=setTimeout(function(){fire(tg)},550)},{passive:true});
+  el.addEventListener('touchmove',function(e){var p=e.touches[0];if(Math.abs(p.clientX-sx)>8||Math.abs(p.clientY-sy)>8)clearTimeout(t)},{passive:true});
+  el.addEventListener('touchend',function(){clearTimeout(t)});
+  el.addEventListener('touchcancel',function(){clearTimeout(t)});
+  el.addEventListener('contextmenu',function(e){e.preventDefault();fire(e.target);setTimeout(function(){fired=false},700)});
+  el.addEventListener('click',function(e){if(fired){e.stopPropagation();e.preventDefault();fired=false}},true);
+}
+$('sh').addEventListener('click',function(e){
+  var b=e.target.closest('[data-act]');
+  if(b){var f=acts[b.getAttribute('data-act')];if(f)f(b);return}
+  var g=e.target.closest('.gc');if(g)g.classList.toggle('on');
+});
+$('sh').addEventListener('change',function(e){
+  var t=e.target;
+  if(t.id==='bkf'){var f=t.files[0];if(!f)return;var r=new FileReader();r.onload=function(){doRestore(String(r.result))};r.readAsText(f);return}
+  if(t.getAttribute&&t.getAttribute('data-kind')&&t.getAttribute('data-f'))rowEdit(t);
+});
+$('ov').addEventListener('click',function(e){if(e.target===$('ov'))closeSheet()});
+$('list').addEventListener('click',function(e){
+  var ab=e.target.closest('[data-act]');if(ab){var af=acts[ab.getAttribute('data-act')];if(af)af(ab);return}
+  var c=e.target.closest('.cd');if(!c)return;
+  var oi=c.getAttribute('data-oi');
+  if(oi!==null){var oa=e.target.closest('[data-a="oadd"]');if(oa){var ox=olist[+oi];if(ox&&!db.items.some(function(y){return (y.alId&&y.alId===ox.id)||y.t.toLowerCase()===ox.name.toLowerCase()}))addOnline(+oi);else onlineDetail(+oi)}else onlineDetail(+oi);return}
+  var id=c.getAttribute('data-id'),x=find(id);if(!x)return;
+  var a=e.target.closest('[data-a]'),k=a&&a.getAttribute('data-a');
+  if(k==='st'){var nm=stNames();if(!nm.length)return;x.s=nm[(nm.indexOf(x.s)+1)%nm.length];if(x.s==='Completed'&&x.te)x.e=x.te;touch(x);return}
+  if(k==='fav'){x.f=!x.f;touch(x);return}
+  detail(id);
+});
+$('list').addEventListener('error',function(e){if(e.target&&e.target.tagName==='IMG')e.target.style.visibility='hidden'},true);
+lp($('list'),function(tg){var c=tg.closest&&tg.closest('.cd');if(c&&c.getAttribute('data-id'))cardMenu(c.getAttribute('data-id'))});
+lp($('chips'),function(tg){var b=tg.closest&&tg.closest('[data-st]');if(b)tabSheet(b.getAttribute('data-st'))});
+$('chips').addEventListener('click',function(e){var b=e.target.closest('[data-st]');if(!b)return;var k=b.getAttribute('data-st');if(k==='+'){addTabSheet();return}view.st=k;render()});
+$('onbar').addEventListener('change',function(e){
+  var t=onTab();if(!t)return;var id=e.target.id;
+  if(id==='o_sort')t.cfg.sort=e.target.value;else if(id==='o_gen')t.cfg.genre=e.target.value;else if(id==='o_n')t.cfg.n=+e.target.value;else return;
+  persist();render();
+});
+$('onbar').addEventListener('click',function(e){if(e.target.id==='o_ref'){var t=onTab();if(t){delete ocache[t.k+JSON.stringify(t.cfg)];render()}}});
+$('q').addEventListener('input',function(){view.q=this.value;render()});
+$('sort').addEventListener('change',function(){view.sort=this.value;render()});
+$('gsel').addEventListener('change',function(){view.g=this.value;render()});
+$('tsel').addEventListener('change',function(){view.t=this.value;render()});
+$('fab').addEventListener('click',function(){edit(null)});
+$('mb').addEventListener('click',menu);
+window.__back=function(){if($('ov').className==='on'){closeSheet();return true}return false};
+
+applyAcc();persist();render();
+</script>
+</body>
+</html>
